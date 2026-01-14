@@ -4,4 +4,7 @@ go 1.21.4
 
 toolchain go1.24.12
 
-require github.com/jackpal/bencode-go v1.0.2 // indirect
+require (
+	github.com/jackpal/bencode-go v1.0.2 // indirect
+	github.com/stretchr/testify v1.11.1 // indirect
+)
