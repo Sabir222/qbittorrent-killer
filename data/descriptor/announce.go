@@ -143,6 +143,7 @@ func (t *TorrentFile) assembleURL(id [20]byte, p uint16) (string, error) {
 	query.Set("downloaded", "0")
 	query.Set("compact", "1")
 	query.Set("left", strconv.Itoa(t.Length))
+	query.Set("event", "started")
 
 	base.RawQuery = query.Encode()
 	return base.String(), nil
