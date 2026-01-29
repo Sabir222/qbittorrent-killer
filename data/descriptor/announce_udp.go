@@ -50,6 +50,63 @@ func (t *TorrentFile) announceUDP(peerID [20]byte, port uint16) ([]endpoints.End
 	return t.sendUDPAnnounce(conn, connID, peerID, port)
 }
 
+func (t *TorrentFile) sendUDPAnnounce(conn *net.UDPConn, connID int64, peerID [20]byte, port uint16) ([]endpoints.Endpoint, error) {
+	txID := randomTransactionID()
+
+	req := make([]byte, 98)
+	binary.BigEndian.PutUint64(req[0:8], uint64(connID))
+	binary.BigEndian.PutUint32(req[8:12], udpActionAnnounce)
+	binary.BigEndian.PutUint32(req[12:16], txID)
+	copy(req[16:36], t.InfoHash[:])
+	copy(req[36:56], peerID[:])
+	binary.BigEndian.PutUint64(req[56:64], 0) // downloaded
+	binary.BigEndian.PutUint64(req[64:72], uint64(t.Length)) // left
+	binary.BigEndian.PutUint64(req[72:80], 0) // uploaded
+	binary.BigEndian.PutUint32(req[80:84], 0) // event = none
+	binary.BigEndian.PutUint32(req[84:88], 0) // IP = default
+	binary.BigEndian.PutUint32(req[88:92], txID) // key
+	binary.BigEndian.PutUint32(req[92:96], math.MaxInt32) // num_want = -1
+	binary.BigEndian.PutUint16(req[96:98], port)
+
+	resp, err := sendUDPRequest(conn, req, udpConnectTimeout)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(resp) < 20 {
+		return nil, errors.New("UDP announce response too short")
+	}
+
+	action := binary.BigEndian.Uint32(resp[0:4])
+	if action == udpActionError {
+		return nil, errors.New("UDP tracker error: " + string(resp[8:]))
+	}
+	if action != udpActionAnnounce {
+		return nil, ErrUDPUnexpectedAction
+	}
+
+	respTxID := binary.BigEndian.Uint32(resp[4:8])
+	if respTxID != txID {
+		return nil, ErrUDPTransactionMismatch
+	}
+
+	// Parse peer list (6 bytes per peer: 4 IP + 2 port)
+	peerData := resp[20:]
+
+	// Calculate number of peers from response size
+	numPeers := len(peerData) / 6
+
+	// Parse peers manually for better control
+	peerList := make([]endpoints.Endpoint, 0, numPeers)
+	for i := 0; i+6 <= len(peerData); i += 6 {
+		ip := net.IP(peerData[i : i+4])
+		port := binary.BigEndian.Uint16(peerData[i+4 : i+6])
+		peerList = append(peerList, endpoints.Endpoint{Addr: ip, Port: port})
+	}
+
+	return peerList, nil
+}
+
 func (t *TorrentFile) getUDPConnectionID(conn *net.UDPConn) (int64, error) {
 	txID := randomTransactionID()
 
