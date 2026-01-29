@@ -140,6 +140,7 @@ func (t *TorrentFile) getUDPConnectionID(conn *net.UDPConn) (int64, error) {
 
 func sendUDPRequest(conn *net.UDPConn, data []byte, timeout time.Duration) ([]byte, error) {
 	maxRetries := 8
+	initialTimeout := timeout
 
 	for attempt := 0; attempt <= maxRetries; attempt++ {
 		conn.SetDeadline(time.Now().Add(timeout))
