@@ -79,12 +79,14 @@ func truncateURL(u string) string {
 func (t *TorrentFile) getTrackerList() []string {
 	var trackers []string
 
+	// First add all tiers from announce-list
 	for _, tier := range t.AnnounceList {
 		for _, tracker := range tier {
 			trackers = append(trackers, tracker)
 		}
 	}
 
+	// Add primary announce if not already in list
 	if t.Announce != "" {
 		found := false
 		for _, tracker := range trackers {
