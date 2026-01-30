@@ -54,7 +54,7 @@ func (t *TorrentFile) announce(peerID [20]byte, port uint16) ([]endpoints.Endpoi
 		return nil, errors.New("no peers received from any tracker")
 	}
 
-	// Remove duplicate peers
+	// Remove duplicate peers using map for deduplication
 	seen := make(map[string]bool)
 	uniquePeers := make([]endpoints.Endpoint, 0, len(allPeers))
 	for _, p := range allPeers {
