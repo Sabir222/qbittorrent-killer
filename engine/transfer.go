@@ -90,6 +90,7 @@ func fetchPiece(conn *connector.PeerConn, j *job) ([]byte, error) {
 	conn.Conn.SetDeadline(time.Now().Add(30 * time.Second))
 	defer conn.Conn.SetDeadline(time.Time{})
 
+	// Pipelined request loop - keep multiple outstanding requests
 	for state.received < j.length {
 		if !state.conn.Choked {
 			for state.pending < MaxPending && state.requested < j.length {
