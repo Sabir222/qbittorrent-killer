@@ -118,6 +118,7 @@ func fetchPiece(conn *connector.PeerConn, j *job) ([]byte, error) {
 }
 
 func verifyPiece(j *job, buf []byte) error {
+	// SHA-1 hash verification for data integrity
 	hash := sha1.Sum(buf)
 	if !bytes.Equal(hash[:], j.hash[:]) {
 		return fmt.Errorf("piece %d failed validation", j.index)
