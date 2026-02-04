@@ -126,6 +126,7 @@ func verifyPiece(j *job, buf []byte) error {
 	return nil
 }
 
+// spawnWorker creates a goroutine that connects to a peer and processes piece jobs
 func (s *Session) spawnWorker(peer endpoints.Endpoint, jobs chan *job, results chan *result) {
 	conn, err := connector.Connect(peer, s.PeerID, s.InfoHash)
 	if err != nil {
