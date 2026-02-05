@@ -178,6 +178,7 @@ func (s *Session) pieceSize(index int) int {
 	return end - begin
 }
 
+// Download starts the download process and returns the complete file data
 func (s *Session) Download() ([]byte, error) {
 	log.Printf("[session] starting download: %s\n", s.Name)
 	log.Printf("[session] %d piece(s), %d peer(s) available\n", len(s.PieceHashes), len(s.Peers))
@@ -185,11 +186,13 @@ func (s *Session) Download() ([]byte, error) {
 	jobs := make(chan *job, len(s.PieceHashes))
 	results := make(chan *result)
 
+	// Queue all pieces as jobs
 	for index, hash := range s.PieceHashes {
 		length := s.pieceSize(index)
 		jobs <- &job{index, hash, length}
 	}
 
+	// Spawn worker goroutines for each peer
 	for _, peer := range s.Peers {
 		go s.spawnWorker(peer, jobs, results)
 	}
