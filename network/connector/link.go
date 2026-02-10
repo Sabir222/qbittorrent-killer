@@ -85,3 +85,39 @@ func Connect(p endpoints.Endpoint, peerID, infoHash [20]byte) (*PeerConn, error)
 		peerID:   peerID,
 	}, nil
 }
+
+func (p *PeerConn) Read() (*frames.Frame, error) {
+	return frames.Unpack(p.Conn)
+}
+
+func (p *PeerConn) SendRequest(index, begin, length int) error {
+	codec := frames.NewCodec()
+	frm := codec.Request(index, begin, length)
+	_, err := p.Conn.Write(frm.Pack())
+	return err
+}
+
+func (p *PeerConn) SendInterested() error {
+	frm := &frames.Frame{Type: frames.TypeInterested}
+	_, err := p.Conn.Write(frm.Pack())
+	return err
+}
+
+func (p *PeerConn) SendNotInterested() error {
+	frm := &frames.Frame{Type: frames.TypeNotInterested}
+	_, err := p.Conn.Write(frm.Pack())
+	return err
+}
+
+func (p *PeerConn) SendUnchoke() error {
+	frm := &frames.Frame{Type: frames.TypeUnchoke}
+	_, err := p.Conn.Write(frm.Pack())
+	return err
+}
+
+func (p *PeerConn) SendHave(index int) error {
+	codec := frames.NewCodec()
+	frm := codec.Have(index)
+	_, err := p.Conn.Write(frm.Pack())
+	return err
+}
