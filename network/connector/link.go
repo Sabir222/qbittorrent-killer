@@ -71,6 +71,7 @@ func Connect(p endpoints.Endpoint, peerID, infoHash [20]byte) (*PeerConn, error)
 		return nil, err
 	}
 
+	// Read peer's bitfield to know which pieces they have
 	bf, err := readBitfield(conn)
 	if err != nil {
 		conn.Close()
