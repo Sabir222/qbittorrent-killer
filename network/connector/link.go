@@ -46,6 +46,7 @@ func readBitfield(conn net.Conn) (mask.Mask, error) {
 	conn.SetDeadline(time.Now().Add(5 * time.Second))
 	defer conn.SetDeadline(time.Time{})
 
+	// Read bitfield message after handshake
 	frm, err := frames.Unpack(conn)
 	if err != nil {
 		return nil, err
