@@ -30,7 +30,7 @@ func entry() {
 	dst := os.Args[2]
 
 	banner()
-	log.SetFlags(log.Ldate | log.Ltime)
+	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds)
 
 	meta, err := descriptor.Open(src)
 	if err != nil {
