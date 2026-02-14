@@ -87,7 +87,7 @@ func fetchPiece(conn *connector.PeerConn, j *job) ([]byte, error) {
 		buf:   make([]byte, j.length),
 	}
 
-	conn.Conn.SetDeadline(time.Now().Add(30 * time.Second))
+	conn.Conn.SetDeadline(time.Now().Add(60 * time.Second))
 	defer conn.Conn.SetDeadline(time.Time{})
 
 	// Pipelined request loop - keep multiple outstanding requests
