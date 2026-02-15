@@ -111,6 +111,13 @@ Once all pieces are downloaded and validated, they're assembled into the final f
     └─────────────────┘ └─────────────┘ └─────────────┘
 ```
 
+**Data Flow:**
+1. CLI loads torrent file → Descriptor parses metadata
+2. Descriptor queries trackers → Returns peer list
+3. Engine spawns workers → Each connects to a peer
+4. Workers request pieces → Validate and return results
+5. Engine assembles pieces → Writes final file
+
 ## Testing
 
 ### Unit Tests
