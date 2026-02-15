@@ -146,12 +146,23 @@ The client optimizes download speed through:
 
 ## Limitations
 
-- No DHT support
-- No PEX (Peer Exchange)
-- No magnet links
-- No protocol encryption
+This is a minimal implementation focusing on core BitTorrent functionality:
 
-Best results with popular torrents (Linux ISOs) with 50+ peers.
+- **No DHT support** - Requires tracker for peer discovery
+- **No PEX (Peer Exchange)** - Cannot learn about peers from connected peers
+- **No magnet links** - Requires `.torrent` file
+- **No protocol encryption** - May be blocked by some ISPs
+- **Single-file torrents only** - Multi-file torrents not supported
+
+**Recommendation:** Best results with popular torrents (Linux ISOs) with 50+ peers.
+
+## Future Improvements
+
+- [ ] DHT support for trackerless downloads
+- [ ] PEX (Peer Exchange) implementation
+- [ ] Magnet link support
+- [ ] Protocol encryption (PE/MSE)
+- [ ] Multi-file torrent support
 
 ## License
 
