@@ -164,14 +164,14 @@ This is a minimal implementation focusing on core BitTorrent functionality:
 - [ ] Protocol encryption (PE/MSE)
 - [ ] Multi-file torrent support
 
-## License
-
-MIT License
-
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Disclaimer
 
-This project is for educational purposes. Please ensure you comply with your local laws and regulations when downloading torrents.
+This project is for educational purposes only. The author(s) are not responsible for any misuse of this software. Please ensure you comply with your local laws and regulations when downloading torrents. Only download content you have the legal right to access.
+
+## License
+
+MIT License - See [LICENSE](LICENSE) for details.
