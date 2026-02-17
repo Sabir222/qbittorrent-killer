@@ -40,6 +40,7 @@ func entry() {
 	fmt.Printf("\n[info] torrent: %s\n", meta.Name)
 	fmt.Printf("[info] size: %.2f MB\n", float64(meta.Length)/1024/1024)
 	fmt.Printf("[info] pieces: %d\n\n", len(meta.PieceHashes))
+	fmt.Println("[info] starting download...\n")
 
 	if err := meta.DownloadToFile(dst); err != nil {
 		log.Fatalf("transfer failed: %v", err)
