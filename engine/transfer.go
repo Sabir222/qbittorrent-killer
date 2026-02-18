@@ -130,7 +130,7 @@ func verifyPiece(j *job, buf []byte) error {
 func (s *Session) spawnWorker(peer endpoints.Endpoint, jobs chan *job, results chan *result) {
 	conn, err := connector.Connect(peer, s.PeerID, s.InfoHash)
 	if err != nil {
-		log.Printf("[peer] ✗ %s unreachable\n", peer.Addr)
+		log.Printf("[peer] ✗ %s unreachable: %v\n", peer.Addr, err)
 		return
 	}
 	defer conn.Conn.Close()
