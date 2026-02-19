@@ -1,6 +1,9 @@
-# Torrent Client
+# Torrent-at-Home
 
 A lightweight BitTorrent client written in Go, designed for efficient file downloads through the BitTorrent protocol.
+
+[![Go Version](https://img.shields.io/badge/Go-1.21-blue)](https://go.dev)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
 ## Features
 
