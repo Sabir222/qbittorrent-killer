@@ -12,6 +12,7 @@ import (
 const (
 	version = "1.0.0"
 	name    = "torrent-at-home"
+	release = "stable"
 )
 
 func banner() {
