@@ -15,10 +15,10 @@ import (
 )
 
 const (
-	udpProtocolID   = 0x41727101980
-	udpActionConnect = 0
+	udpProtocolID     = 0x41727101980
+	udpActionConnect  = 0
 	udpActionAnnounce = 1
-	udpActionError   = 3
+	udpActionError    = 3
 	udpConnectTimeout = 15 * time.Second
 )
 
@@ -59,13 +59,13 @@ func (t *TorrentFile) sendUDPAnnounce(conn *net.UDPConn, connID int64, peerID [2
 	binary.BigEndian.PutUint32(req[12:16], txID)
 	copy(req[16:36], t.InfoHash[:])
 	copy(req[36:56], peerID[:])
-	binary.BigEndian.PutUint64(req[56:64], 0) // downloaded
+	binary.BigEndian.PutUint64(req[56:64], 0)                // downloaded
 	binary.BigEndian.PutUint64(req[64:72], uint64(t.Length)) // left
-	binary.BigEndian.PutUint64(req[72:80], 0) // uploaded
-	binary.BigEndian.PutUint32(req[80:84], 0) // event = none
-	binary.BigEndian.PutUint32(req[84:88], 0) // IP = default
-	binary.BigEndian.PutUint32(req[88:92], txID) // key
-	binary.BigEndian.PutUint32(req[92:96], math.MaxInt32) // num_want = -1
+	binary.BigEndian.PutUint64(req[72:80], 0)                // uploaded
+	binary.BigEndian.PutUint32(req[80:84], 0)                // event = none
+	binary.BigEndian.PutUint32(req[84:88], 0)                // IP = default
+	binary.BigEndian.PutUint32(req[88:92], txID)             // key
+	binary.BigEndian.PutUint32(req[92:96], math.MaxInt32)    // num_want = -1
 	binary.BigEndian.PutUint16(req[96:98], port)
 
 	resp, err := sendUDPRequest(conn, req, udpConnectTimeout)

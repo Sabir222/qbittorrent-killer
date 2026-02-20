@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jackpal/bencode-go"
 	"github.com/Sabir222/torrent-at-home/engine"
+	"github.com/jackpal/bencode-go"
 )
 
 const Port uint16 = 6881
@@ -32,7 +32,7 @@ type bencodeInfo struct {
 
 type bencodeTorrent struct {
 	Announce     string      `bencode:"announce"`
-	AnnounceList [][]string `bencode:"announce-list"`
+	AnnounceList [][]string  `bencode:"announce-list"`
 	Info         bencodeInfo `bencode:"info"`
 }
 

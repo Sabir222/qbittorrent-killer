@@ -36,4 +36,3 @@ func Parse(raw []byte) ([]Endpoint, error) {
 func (e Endpoint) String() string {
 	return net.JoinHostPort(e.Addr.String(), strconv.Itoa(int(e.Port)))
 }
-

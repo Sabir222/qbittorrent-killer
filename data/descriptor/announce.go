@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	trackerTimeout  = 15 * time.Second
-	defaultPort     = 6881
+	trackerTimeout = 15 * time.Second
+	defaultPort    = 6881
 )
 
 var ErrTrackerResponse = errors.New("invalid tracker response")

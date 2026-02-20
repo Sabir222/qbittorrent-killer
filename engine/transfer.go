@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/Sabir222/torrent-at-home/network/connector"
-	"github.com/Sabir222/torrent-at-home/protocol/frames"
 	"github.com/Sabir222/torrent-at-home/network/endpoints"
+	"github.com/Sabir222/torrent-at-home/protocol/frames"
 )
 
 const (

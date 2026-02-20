@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	TypeChoke         = iota
+	TypeChoke = iota
 	TypeUnchoke
 	TypeInterested
 	TypeNotInterested

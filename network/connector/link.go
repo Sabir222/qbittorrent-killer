@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/Sabir222/torrent-at-home/data/mask"
-	"github.com/Sabir222/torrent-at-home/protocol/greeting"
-	"github.com/Sabir222/torrent-at-home/protocol/frames"
 	"github.com/Sabir222/torrent-at-home/network/endpoints"
+	"github.com/Sabir222/torrent-at-home/protocol/frames"
+	"github.com/Sabir222/torrent-at-home/protocol/greeting"
 )
 
 type PeerConn struct {
