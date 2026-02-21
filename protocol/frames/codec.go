@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	TypeChoke = iota
+	TypeChoke         = iota
 	TypeUnchoke
 	TypeInterested
 	TypeNotInterested
@@ -144,18 +144,4 @@ func (f *Frame) String() string {
 		return "KeepAlive"
 	}
 	return f.Label()
-}
-
-func Request(pieceIdx, offset, size int) *Frame {
-	buf := make([]byte, 12)
-	binary.BigEndian.PutUint32(buf[0:4], uint32(pieceIdx))
-	binary.BigEndian.PutUint32(buf[4:8], uint32(offset))
-	binary.BigEndian.PutUint32(buf[8:12], uint32(size))
-	return &Frame{Type: TypeRequest, Data: buf}
-}
-
-func Have(pieceIdx int) *Frame {
-	buf := make([]byte, 4)
-	binary.BigEndian.PutUint32(buf, uint32(pieceIdx))
-	return &Frame{Type: TypeHave, Data: buf}
 }

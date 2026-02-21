@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/Sabir222/torrent-at-home/data/mask"
-	"github.com/Sabir222/torrent-at-home/network/endpoints"
-	"github.com/Sabir222/torrent-at-home/protocol/frames"
 	"github.com/Sabir222/torrent-at-home/protocol/greeting"
+	"github.com/Sabir222/torrent-at-home/protocol/frames"
+	"github.com/Sabir222/torrent-at-home/network/endpoints"
 )
 
 type PeerConn struct {
@@ -46,7 +46,6 @@ func readBitfield(conn net.Conn) (mask.Mask, error) {
 	conn.SetDeadline(time.Now().Add(5 * time.Second))
 	defer conn.SetDeadline(time.Time{})
 
-	// Read bitfield message after handshake
 	frm, err := frames.Unpack(conn)
 	if err != nil {
 		return nil, err
@@ -71,7 +70,6 @@ func Connect(p endpoints.Endpoint, peerID, infoHash [20]byte) (*PeerConn, error)
 		return nil, err
 	}
 
-	// Read peer's bitfield to know which pieces they have
 	bf, err := readBitfield(conn)
 	if err != nil {
 		conn.Close()

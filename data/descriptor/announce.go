@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	trackerTimeout = 15 * time.Second
-	defaultPort    = 6881
+	trackerTimeout  = 15 * time.Second
+	defaultPort     = 6881
 )
 
 var ErrTrackerResponse = errors.New("invalid tracker response")
@@ -54,7 +54,7 @@ func (t *TorrentFile) announce(peerID [20]byte, port uint16) ([]endpoints.Endpoi
 		return nil, errors.New("no peers received from any tracker")
 	}
 
-	// Remove duplicate peers using map for deduplication
+	// Remove duplicate peers
 	seen := make(map[string]bool)
 	uniquePeers := make([]endpoints.Endpoint, 0, len(allPeers))
 	for _, p := range allPeers {
@@ -79,14 +79,12 @@ func truncateURL(u string) string {
 func (t *TorrentFile) getTrackerList() []string {
 	var trackers []string
 
-	// First add all tiers from announce-list
 	for _, tier := range t.AnnounceList {
 		for _, tracker := range tier {
 			trackers = append(trackers, tracker)
 		}
 	}
 
-	// Add primary announce if not already in list
 	if t.Announce != "" {
 		found := false
 		for _, tracker := range trackers {
@@ -145,7 +143,6 @@ func (t *TorrentFile) assembleURL(id [20]byte, p uint16) (string, error) {
 	query.Set("downloaded", "0")
 	query.Set("compact", "1")
 	query.Set("left", strconv.Itoa(t.Length))
-	query.Set("event", "started")
 
 	base.RawQuery = query.Encode()
 	return base.String(), nil

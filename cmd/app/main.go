@@ -12,7 +12,6 @@ import (
 const (
 	version = "1.0.0"
 	name    = "torrent-at-home"
-	release = "stable"
 )
 
 func banner() {
@@ -31,7 +30,8 @@ func entry() {
 	dst := os.Args[2]
 
 	banner()
-	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds)
+
+	log.SetFlags(log.Ldate | log.Ltime)
 
 	meta, err := descriptor.Open(src)
 	if err != nil {
@@ -40,8 +40,7 @@ func entry() {
 
 	fmt.Printf("\n[info] torrent: %s\n", meta.Name)
 	fmt.Printf("[info] size: %.2f MB\n", float64(meta.Length)/1024/1024)
-	fmt.Printf("[info] pieces: %d\n", len(meta.PieceHashes))
-	fmt.Println("\n[info] starting download...")
+	fmt.Printf("[info] pieces: %d\n\n", len(meta.PieceHashes))
 
 	if err := meta.DownloadToFile(dst); err != nil {
 		log.Fatalf("transfer failed: %v", err)

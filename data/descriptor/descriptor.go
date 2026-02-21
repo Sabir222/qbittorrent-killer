@@ -7,12 +7,14 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Sabir222/torrent-at-home/engine"
 	"github.com/jackpal/bencode-go"
+	"github.com/Sabir222/torrent-at-home/engine"
 )
 
+// Port to listen on
 const Port uint16 = 6881
 
+// TorrentFile encodes the metadata from a .torrent file
 type TorrentFile struct {
 	Announce     string
 	AnnounceList [][]string
@@ -31,11 +33,51 @@ type bencodeInfo struct {
 }
 
 type bencodeTorrent struct {
-	Announce     string      `bencode:"announce"`
-	AnnounceList [][]string  `bencode:"announce-list"`
+	Announce    string      `bencode:"announce"`
+	AnnounceList [][]string `bencode:"announce-list"`
 	Info         bencodeInfo `bencode:"info"`
 }
 
+// DownloadToFile downloads a torrent and writes it to a file
+func (t *TorrentFile) DownloadToFile(path string) error {
+	var peerID [20]byte
+	_, err := rand.Read(peerID[:])
+	if err != nil {
+		return err
+	}
+
+	peers, err := t.announce(peerID, Port)
+	if err != nil {
+		return err
+	}
+
+	session := engine.Session{
+		Peers:       peers,
+		PeerID:      peerID,
+		InfoHash:    t.InfoHash,
+		PieceHashes: t.PieceHashes,
+		PieceLength: t.PieceLength,
+		Length:      t.Length,
+		Name:        t.Name,
+	}
+	buf, err := session.Download()
+	if err != nil {
+		return err
+	}
+
+	outFile, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer outFile.Close()
+	_, err = outFile.Write(buf)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Open parses a torrent file
 func Open(path string) (TorrentFile, error) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -95,43 +137,4 @@ func (bto *bencodeTorrent) toTorrentFile() (TorrentFile, error) {
 		Name:         bto.Info.Name,
 	}
 	return t, nil
-}
-
-// DownloadToFile downloads a torrent and writes it to a file
-func (t *TorrentFile) DownloadToFile(path string) error {
-	var peerID [20]byte
-	_, err := rand.Read(peerID[:])
-	if err != nil {
-		return err
-	}
-
-	peers, err := t.announce(peerID, Port)
-	if err != nil {
-		return err
-	}
-
-	session := engine.Session{
-		Peers:       peers,
-		PeerID:      peerID,
-		InfoHash:    t.InfoHash,
-		PieceHashes: t.PieceHashes,
-		PieceLength: t.PieceLength,
-		Length:      t.Length,
-		Name:        t.Name,
-	}
-	buf, err := session.Download()
-	if err != nil {
-		return err
-	}
-
-	outFile, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer outFile.Close()
-	_, err = outFile.Write(buf)
-	if err != nil {
-		return err
-	}
-	return nil
 }

@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/Sabir222/torrent-at-home/network/connector"
-	"github.com/Sabir222/torrent-at-home/network/endpoints"
 	"github.com/Sabir222/torrent-at-home/protocol/frames"
+	"github.com/Sabir222/torrent-at-home/network/endpoints"
 )
 
 const (
@@ -40,12 +40,12 @@ type result struct {
 }
 
 type transferState struct {
-	index     int
-	conn      *connector.PeerConn
-	buf       []byte
-	received  int
-	requested int
-	pending   int
+	index      int
+	conn       *connector.PeerConn
+	buf        []byte
+	received   int
+	requested  int
+	pending    int
 }
 
 func (s *transferState) processMsg() error {
@@ -87,10 +87,9 @@ func fetchPiece(conn *connector.PeerConn, j *job) ([]byte, error) {
 		buf:   make([]byte, j.length),
 	}
 
-	conn.Conn.SetDeadline(time.Now().Add(60 * time.Second))
+	conn.Conn.SetDeadline(time.Now().Add(30 * time.Second))
 	defer conn.Conn.SetDeadline(time.Time{})
 
-	// Pipelined request loop - keep multiple outstanding requests
 	for state.received < j.length {
 		if !state.conn.Choked {
 			for state.pending < MaxPending && state.requested < j.length {
@@ -118,7 +117,6 @@ func fetchPiece(conn *connector.PeerConn, j *job) ([]byte, error) {
 }
 
 func verifyPiece(j *job, buf []byte) error {
-	// SHA-1 hash verification for data integrity
 	hash := sha1.Sum(buf)
 	if !bytes.Equal(hash[:], j.hash[:]) {
 		return fmt.Errorf("piece %d failed validation", j.index)
@@ -126,11 +124,10 @@ func verifyPiece(j *job, buf []byte) error {
 	return nil
 }
 
-// spawnWorker creates a goroutine that connects to a peer and processes piece jobs
 func (s *Session) spawnWorker(peer endpoints.Endpoint, jobs chan *job, results chan *result) {
 	conn, err := connector.Connect(peer, s.PeerID, s.InfoHash)
 	if err != nil {
-		log.Printf("[peer] ✗ %s unreachable: %v\n", peer.Addr, err)
+		log.Printf("[peer] ✗ %s unreachable\n", peer.Addr)
 		return
 	}
 	defer conn.Conn.Close()
@@ -178,7 +175,6 @@ func (s *Session) pieceSize(index int) int {
 	return end - begin
 }
 
-// Download starts the download process and returns the complete file data
 func (s *Session) Download() ([]byte, error) {
 	log.Printf("[session] starting download: %s\n", s.Name)
 	log.Printf("[session] %d piece(s), %d peer(s) available\n", len(s.PieceHashes), len(s.Peers))
@@ -186,13 +182,11 @@ func (s *Session) Download() ([]byte, error) {
 	jobs := make(chan *job, len(s.PieceHashes))
 	results := make(chan *result)
 
-	// Queue all pieces as jobs
 	for index, hash := range s.PieceHashes {
 		length := s.pieceSize(index)
 		jobs <- &job{index, hash, length}
 	}
 
-	// Spawn worker goroutines for each peer
 	for _, peer := range s.Peers {
 		go s.spawnWorker(peer, jobs, results)
 	}
