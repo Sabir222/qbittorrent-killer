@@ -1,4 +1,4 @@
-# Torrent-at-Home
+# qbittorrent-killer
 
 A lightweight BitTorrent client written in Go, designed for efficient file downloads through the BitTorrent protocol.
 
@@ -36,9 +36,9 @@ torrent-client/
 ### Build from Source
 
 ```bash
-git clone https://github.com/Sabir222/torrent-at-home.git
-cd torrent-at-home
-go build -o torrent-at-home ./cmd/app
+git clone https://github.com/Sabir222/qbittorrent-killer.git
+cd qbittorrent-killer
+go build -o qbittorrent-killer ./cmd/app
 ```
 
 ### Requirements
@@ -48,14 +48,14 @@ go build -o torrent-at-home ./cmd/app
 ## Usage
 
 ```bash
-./torrent-at-home <torrent-file> <output-path>
+./qbittorrent-killer <torrent-file> <output-path>
 ```
 
 ### Example
 
 ```bash
 # Download a Linux ISO
-./torrent-at-home kali-linux-2025.4-installer-amd64.iso.torrent ./kali.iso
+./qbittorrent-killer kali-linux-2025.4-installer-amd64.iso.torrent ./kali.iso
 ```
 
 ## How It Works
@@ -136,7 +136,7 @@ go test ./...
 Use the included Kali Linux torrent:
 
 ```bash
-./torrent-at-home kali-linux-2025.4-installer-amd64.iso.torrent ./kali.iso
+./qbittorrent-killer kali-linux-2025.4-installer-amd64.iso.torrent ./kali.iso
 ```
 
 ## Performance
